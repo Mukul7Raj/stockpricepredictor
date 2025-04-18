@@ -1,0 +1,10 @@
+flask
+python-dotenv
+yfinance
+requests
+torch
+pandas
+praw
+plotly
+torch --index-url https://download.pytorch.org/whl/cpu
+transformers
