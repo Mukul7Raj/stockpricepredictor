@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Sentiment Analysis</h1>
+        
+        <div class="form-container">
+            <form method="POST" id="analysis-form">
+                <input type="text" name="symbol" placeholder="Enter stock symbol (e.g., AAPL)" required 
+                       pattern="[A-Za-z]+" title="Please enter a valid stock symbol">
+                <button type="submit" id="analyze-button">Analyze</button>
+            </form>
+            <p class="help-text">Enter a stock symbol to analyze its sentiment based on recent news and social media.</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if loading %}
+        <div class="loading">
+            <p>Analyzing stock sentiment...</p>
+        </div>
+        {% endif %}
+
+        {% if results %}
+        <div class="results-container">
+            <div class="stock-info">
+                <div class="info-card">
+                    <h3>Stock Symbol</h3>
+                    <p>{{ results.symbol }}</p>
+                </div>
+                <div class="info-card">
+                    <h3>Current Price</h3>
+                    <p>${{ results.current_price }}</p>
+                </div>
+                <div class="info-card">
+                    <h3>Sentiment Score</h3>
+                    <p class="sentiment-score {{ results.sentiment_class }}">
+                        {{ results.sentiment_score }}%
+                    </p>
+                </div>
+            </div>
+
+            <div class="analysis-details">
+                <h2>Analysis Details</h2>
+                <p>{{ results.analysis_summary }}</p>
+                
+                {% if results.recommendations %}
+                <h3>Recommendations</h3>
+                <ul>
+                    {% for rec in results.recommendations %}
+                    <li>{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('analysis-form').addEventListener('submit', function() {
+            document.getElementById('analyze-button').disabled = true;
+            document.getElementById('analyze-button').textContent = 'Analyzing...';
+        });
+    </script>
+</body>
+</html>
